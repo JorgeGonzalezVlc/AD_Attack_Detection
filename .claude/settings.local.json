@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mv \"/c/Users/jorge/Desktop/AD_Lab\" \"/c/Users/jorge/Desktop/AD_Attack_Detection\")"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\jorge\\Desktop"
+    ]
+  }
+}
