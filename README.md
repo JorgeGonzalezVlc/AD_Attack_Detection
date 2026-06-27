@@ -82,22 +82,13 @@ Dominio: `adlab.local`
 AD_Attack_Detection/
 │
 ├── README.md
-├── README_ES.md
 │
-├── lab-setup/
-│   ├── setup_en.md
-│   └── setup_es.md
+├── ReProasting/
+│   ├── 01_AS-REProasting_ES.md
+│   ├── 01_detection_ASREProasting.ps1
+│   └── img/
 │
-├── attacks/
-│   ├── 01_AS-REProasting/
-│   │   ├── attack_en.md
-│   │   ├── attack_es.md
-│   │   └── detection.ps1
-│   ├── 02_Kerberoasting/
-│   └── ...
-│
-└── detection/
-    └── AD-ThreatDetector.ps1
+└── (próximos módulos)
 ```
 
 ---
