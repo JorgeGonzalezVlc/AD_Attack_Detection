@@ -57,15 +57,15 @@ Para que el ataque tenga sentido, el servicio SQL Server debe estar instalado y 
 
 **1. Instalación de SQL Server 2019 Express en el DC:**
 
-![Instalación de SQL Server 2019 Express](img/Instalamos SQLServer 2019 express.png)
+![Instalación de SQL Server 2019 Express](img/Instalamos%20SQLServer%202019%20express.png)
 
 **2. Regla de firewall para permitir conexiones al puerto 1433:**
 
-![Regla de firewall SQL Server 1433](img/creamos regla de firewall.png)
+![Regla de firewall SQL Server 1433](img/creamos%20regla%20de%20firewall.png)
 
 **3. Verificación de la conexión desde DC01 vía SQL Server Management Studio:**
 
-![Conexión desde DC01](img/conexion desde DC01.png)
+![Conexión desde DC01](img/conexion%20desde%20DC01.png)
 
 La query sobre `sys.dm_exec_connections` confirma que el servidor acepta conexiones TCP en el puerto 1433 con autenticación NTLM, lo que valida que el servicio está activo antes de registrar el SPN.
 
@@ -103,7 +103,7 @@ Valores de ServicePrincipalName registrados para CN=svc_sql,CN=Users,DC=adlab,DC
 
 En la imagen se puede ver el ADSI Edit con los dos SPNs registrados en el atributo `servicePrincipalName` de la cuenta `svc_sql`:
 
-![Creación del SPN en ADSI Edit](img/Creamos SPN para uausrio.png)
+![Creación del SPN en ADSI Edit](img/Creamos%20SPN%20para%20uausrio.png)
 
 ---
 
@@ -137,7 +137,7 @@ Resultado:
 [*] Hash written to : C:\Users\Public\hashes_kerb.txt
 ```
 
-![Rubeus ejecutando Kerberoasting desde WS01](img/rubeus desde ws01.png)
+![Rubeus ejecutando Kerberoasting desde WS01](img/rubeus%20desde%20ws01.png)
 
 ---
 
@@ -171,7 +171,7 @@ impacket-GetUserSPNs adlab.local/lamine:Password123! -dc-ip 100.100.100.50 -requ
 
 Esto se autentica como `lamine`, enumera todas las cuentas con SPN registrado, y solicita directamente los tickets de servicio para cada una.
 
-![Ataque desde Kali con impacket-GetUserSPNs](img/ataque desde kali.png)
+![Ataque desde Kali con impacket-GetUserSPNs](img/ataque%20desde%20kali.png)
 
 ---
 
@@ -197,9 +197,9 @@ $krb5tgs$23$*svc_sql$ADLAB.LOCAL$MSSQLSvc/DC01.adlab.local...:Password123!
 Status: Cracked
 ```
 
-![Hashcat iniciando el ataque con modo 13100](img/hashcat 1.png)
+![Hashcat iniciando el ataque con modo 13100](img/hashcat%201.png)
 
-![Hashcat confirmando el hash crackeado: Password123!](img/hashcat 2.png)
+![Hashcat confirmando el hash crackeado: Password123!](img/hashcat%202.png)
 
 ---
 
@@ -232,7 +232,7 @@ A diferencia de AS-REProasting, **un solo evento RC4 no es prueba suficiente** d
 
 En el log real del laboratorio se puede ver el Event ID 4769 filtrado: 201 eventos generados, con `lamine@ADLAB.LOCAL` solicitando el ticket de `svc_sql` con cifrado `0x17` (RC4) desde la IP de Kali (`::ffff:100.100.100.20`):
 
-![Event ID 4769 en el Visor de eventos del DC](img/Log generado.png)
+![Event ID 4769 en el Visor de eventos del DC](img/Log%20generado.png)
 
 ---
 
