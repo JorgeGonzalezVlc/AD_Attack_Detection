@@ -222,4 +222,4 @@ Get-ADUser -Filter {DoesNotRequirePreAuth -eq $true} -Properties DoesNotRequireP
 
 ## Archivos
 
-- [`detection.ps1`](detection.ps1) — Módulo de detección PowerShell
+- [`01_detection_ASREProasting.ps1`](01_detection_ASREProasting.ps1) — Módulo de detección PowerShell

@@ -328,4 +328,4 @@ Get-ADUser -Filter {ServicePrincipalName -like "*"} -Properties ServicePrincipal
 
 ## Archivos
 
-- [`detection.ps1`](detection.ps1) — Módulo de detección PowerShell
+- [`02_detection_Kerberoasting.ps1`](02_detection_Kerberoasting.ps1) — Módulo de detección PowerShell
