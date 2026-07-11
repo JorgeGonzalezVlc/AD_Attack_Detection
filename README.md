@@ -4,6 +4,13 @@
 
 ---
 
+> [!WARNING]
+> **Disclaimer:** Este repositorio tiene fines **exclusivamente educativos y de investigación en ciberseguridad defensiva**. Todo el contenido (ataques, scripts y capturas) fue realizado en un laboratorio propio y aislado (`adlab.local`), sin conexión a sistemas de producción ni de terceros.
+>
+> El autor no se hace responsable del mal uso que se le pueda dar a la información o scripts aquí publicados. No utilices estas técnicas contra redes, sistemas o cuentas sobre las que no tengas autorización explícita y por escrito. El uso no autorizado de estas técnicas puede constituir un delito.
+
+---
+
 ## ¿Qué es este proyecto?
 
 **AD Attack Detection** es un toolkit de detección de código abierto basado en PowerShell, diseñado para administradores de Active Directory que quieren saber si su infraestructura está siendo atacada.
@@ -47,11 +54,11 @@ El script se ejecuta a las 23:59 cada día y genera un informe con:
 | # | Ataque | Event IDs | Estado |
 |---|--------|-----------|--------|
 | 01 | AS-REProasting | 4768 | ✅ Completado |
-| 02 | Kerberoasting | 4769 | 🔄 En progreso |
-| 03 | GPP Passwords | 4688 | ⬜ Pendiente |
-| 04 | GPO Permissions / GPO Files | 5136, 4670 | ⬜ Pendiente |
-| 05 | Credentials in Shares | 5140, 5145 | ⬜ Pendiente |
-| 06 | Credentials in Object Properties | 4662 | ⬜ Pendiente |
+| 02 | Kerberoasting | 4769 | ✅ Completado |
+| 03 | GPP Passwords | 4688 | ✅ Completado |
+| 04 | GPO Permissions / GPO Files | 5136, 4670 | ✅ Completado |
+| 05 | Credentials in Shares | 5140, 5145 | ✅ Completado |
+| 06 | Credentials in Object Properties | 4662 | ✅ Completado |
 | 07 | DCSync | 4662, 4929 | ⬜ Pendiente |
 | 08 | Golden Ticket | 4768, 4769 | ⬜ Pendiente |
 | 09 | Kerberos Constrained Delegation | 4769 | ⬜ Pendiente |
@@ -83,12 +90,37 @@ AD_Attack_Detection/
 │
 ├── README.md
 │
-├── ReProasting/
+├── 01_ReProasting/
 │   ├── 01_AS-REProasting_ES.md
 │   ├── 01_detection_ASREProasting.ps1
 │   └── img/
 │
-└── (próximos módulos)
+├── 02_Kerberoasting/
+│   ├── 02_Kerberoasting.md
+│   ├── 02_detection_Kerberoasting.ps1
+│   └── img/
+│
+├── 03_GPP Passwords/
+│   ├── 03_GPPPasswords.md
+│   ├── 03_detection_GPPPasswords.ps1
+│   └── img/
+│
+├── 04_GPO Permisos y ficheros/
+│   ├── 04_GPO_Permissions.md
+│   ├── AD-ThreatDetector.ps1
+│   └── img/
+│
+├── 05_Credenciales compartidas/
+│   ├── 05_Credentials_in_Shares.md
+│   ├── Detect-CredentialEnumeration.ps1
+│   └── img/
+│
+├── 06_informacion en propiedades de objeto/
+│   ├── 06_Credentials_in_Object_Properties.md
+│   ├── Detect-HoneypotAttack.ps1
+│   └── img/
+│
+└── (próximos módulos: 07_DCSync, 08_GoldenTicket, ...)
 ```
 
 ---
@@ -107,12 +139,6 @@ AD_Attack_Detection/
 Este proyecto está en desarrollo activo. Cada módulo de ataque está documentado de forma independiente para que puedas contribuir a detecciones individuales sin tocar el resto del código.
 
 Los pull requests son bienvenidos.
-
----
-
-## Aviso legal
-
-Este proyecto está destinado **únicamente a fines educativos y defensivos**. Todas las simulaciones de ataques se realizaron en un entorno de laboratorio aislado. Nunca utilices estas técnicas contra sistemas que no sean de tu propiedad o para los que no tengas permiso explícito.
 
 ---
 
