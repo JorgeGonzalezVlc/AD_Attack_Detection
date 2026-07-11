@@ -59,8 +59,8 @@ El script se ejecuta a las 23:59 cada día y genera un informe con:
 | 04 | GPO Permissions / GPO Files | 4688, 5136 | ✅ Completado |
 | 05 | Credentials in Shares | 5145 | ✅ Completado |
 | 06 | Credentials in Object Properties | 4624 | ✅ Completado |
-| 07 | DCSync | 4662, 4929 | ⬜ Pendiente |
-| 08 | Golden Ticket | 4768, 4769 | ⬜ Pendiente |
+| 07 | DCSync | 4662 | ✅ Completado |
+| 08 | Golden Ticket | 4768, 4769, 4776 | ✅ Completado |
 | 09 | Kerberos Constrained Delegation | 4769 | ⬜ Pendiente |
 | 10 | Print Spooler & NTLM Relaying | 4648, 4624 | ⬜ Pendiente |
 | 11 | Coercing & Unconstrained Delegation | 4768 | ⬜ Pendiente |
@@ -120,7 +120,17 @@ AD_Attack_Detection/
 │   ├── Detect-HoneypotAttack.ps1
 │   └── img/
 │
-└── (próximos módulos: 07_DCSync, 08_GoldenTicket, ...)
+├── 07_DCSync/
+│   ├── 07_DCSync.md
+│   ├── Detect-DCSync.ps1
+│   └── img/
+│
+├── 08_GoldenTicket/
+│   ├── 08_Golden_Ticket.md
+│   ├── Detect-GoldenTicket.ps1
+│   └── img/
+│
+└── (próximos módulos: 09_KerberosConstrainedDelegation, ...)
 ```
 
 ---
