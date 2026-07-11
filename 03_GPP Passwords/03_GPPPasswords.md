@@ -278,4 +278,9 @@ Get-ChildItem -Path "\\adlab.local\SYSVOL\adlab.local\Policies" -Recurse -Includ
 
 ## Archivos
 
-- [`detection.ps1`](detection.ps1) — Módulo de detección PowerShell
+- [`03_detection_GPPPasswords.ps1`](03_detection_GPPPasswords.ps1) — Módulo de detección PowerShell
+
+---
+
+**Estado**: Completado  
+**Evidencia generada**: Event ID 5145 (Detailed File Share, acceso a SYSVOL)

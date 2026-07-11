@@ -1,6 +1,10 @@
 # AD Attack Detection
 
-> Una herramienta práctica para administradores IT que quieren detectar los ataques más comunes contra Active Directory en tiempo real.
+> Laboratorio propio de Active Directory donde reproduzco ataques reales (Kerberoasting, DCSync, Golden Ticket...) paso a paso y construyo, para cada uno, su detección en PowerShell basada en Event IDs reales de Windows.
+
+![PowerShell](https://img.shields.io/badge/PowerShell-5.1%2B-5391FE?logo=powershell&logoColor=white)
+![Ataques documentados](https://img.shields.io/badge/Ataques%20documentados-8%2F13-brightgreen)
+![Enfoque](https://img.shields.io/badge/Enfoque-Blue%20Team%20%2B%20Red%20Team-blue)
 
 ---
 
@@ -11,7 +15,19 @@
 
 ---
 
-## ¿Qué es este proyecto?
+## Qué demuestra este proyecto
+
+Este repo no es una recopilación de teoría: es el registro de un laboratorio de AD montado, atacado y defendido de principio a fin por mí. Concretamente, cada módulo demuestra:
+
+- **Entendimiento real de Kerberos/NTLM y sus abusos** — AS-REP Roasting, Kerberoasting, DCSync y Golden Ticket no descritos de oídas, sino ejecutados contra un DC propio con Mimikatz, Rubeus, Impacket y Crackmapexec.
+- **Detection engineering aplicado**, no solo teoría de IoCs: cada ataque termina en un script PowerShell funcional que consulta el Visor de eventos (`Get-WinEvent`), filtra por Event ID real y genera alertas — sin depender de un SIEM de pago.
+- **Doble perspectiva ofensiva/defensiva** sobre el mismo entorno: ejecuto el ataque desde el rol de atacante (Kali/WS01) y después me pongo del lado del defensor para diseñar la detección y el hardening.
+- **Autonomía de infraestructura**: el laboratorio (DC, cliente Windows, atacante Kali) está montado, configurado y documentado por mí, incluyendo la activación de las políticas de auditoría necesarias para que cada evento se genere.
+- **Comunicación técnica clara**: cada módulo sigue la misma estructura (teoría → ataque reproducible → evidencia real en capturas → IoCs → detección → mitigación), pensada para que cualquier compañero de equipo pueda seguirla sin contexto previo.
+
+---
+
+## Qué es este proyecto
 
 **AD Attack Detection** es un toolkit de detección de código abierto basado en PowerShell, diseñado para administradores de Active Directory que quieren saber si su infraestructura está siendo atacada.
 
@@ -21,7 +37,7 @@ Sin agentes. Sin software de terceros. Solo PowerShell y los registros de evento
 
 ---
 
-## ¿Por qué existe este proyecto?
+## Por qué existe este proyecto
 
 Active Directory es la columna vertebral de la mayoría de entornos empresariales, y el objetivo principal de los atacantes. Técnicas como Kerberoasting, DCSync o los ataques de Golden Ticket están bien documentadas, son ampliamente utilizadas y a menudo pasan desapercibidas durante semanas o meses.
 
@@ -51,21 +67,21 @@ El script se ejecuta a las 23:59 cada día y genera un informe con:
 
 ## Ataques cubiertos
 
-| # | Ataque | Event IDs | Estado |
-|---|--------|-----------|--------|
-| 01 | AS-REProasting | 4768 | ✅ Completado |
-| 02 | Kerberoasting | 4769 | ✅ Completado |
-| 03 | GPP Passwords | 5145 | ✅ Completado |
-| 04 | GPO Permissions / GPO Files | 4688, 5136 | ✅ Completado |
-| 05 | Credentials in Shares | 5145 | ✅ Completado |
-| 06 | Credentials in Object Properties | 4624 | ✅ Completado |
-| 07 | DCSync | 4662 | ✅ Completado |
-| 08 | Golden Ticket | 4768, 4769, 4776 | ✅ Completado |
-| 09 | Kerberos Constrained Delegation | 4769 | ⬜ Pendiente |
-| 10 | Print Spooler & NTLM Relaying | 4648, 4624 | ⬜ Pendiente |
-| 11 | Coercing & Unconstrained Delegation | 4768 | ⬜ Pendiente |
-| 12 | Object ACLs | 4662, 5136 | ⬜ Pendiente |
-| 13 | PKI - ESC1 | 4886, 4887 | ⬜ Pendiente |
+| # | Ataque | Event IDs | Documentación | Detección |
+|---|--------|-----------|----------------|-----------|
+| 01 | AS-REProasting | 4768 | [Documentación](01_ReProasting/01_AS-REProasting_ES.md) | [Script](01_ReProasting/01_detection_ASREProasting.ps1) |
+| 02 | Kerberoasting | 4769 | [Documentación](02_Kerberoasting/02_Kerberoasting.md) | [Script](02_Kerberoasting/02_detection_Kerberoasting.ps1) |
+| 03 | GPP Passwords | 5145 | [Documentación](<03_GPP Passwords/03_GPPPasswords.md>) | [Script](<03_GPP Passwords/03_detection_GPPPasswords.ps1>) |
+| 04 | GPO Permissions / GPO Files | 4688, 5136 | [Documentación](<04_GPO Permisos y ficheros/04_GPO_Permissions.md>) | [Script](<04_GPO Permisos y ficheros/AD-ThreatDetector.ps1>) |
+| 05 | Credentials in Shares | 5145 | [Documentación](<05_Credenciales compartidas/05_Credentials_in_Shares.md>) | [Script](<05_Credenciales compartidas/Detect-CredentialEnumeration.ps1>) |
+| 06 | Credentials in Object Properties | 4624 | [Documentación](<06_informacion en propiedades de objeto/06_Credentials_in_Object_Properties.md>) | [Script](<06_informacion en propiedades de objeto/Detect-HoneypotAttack.ps1>) |
+| 07 | DCSync | 4662 | [Documentación](07_DCSync/07_DCSync.md) | [Script](07_DCSync/Detect-DCSync.ps1) |
+| 08 | Golden Ticket | 4768, 4769, 4776 | [Documentación](08_GoldenTicket/08_Golden_Ticket.md) | [Script](08_GoldenTicket/Detect-GoldenTicket.ps1) |
+| 09 | Kerberos Constrained Delegation | 4769 | ⬜ Pendiente | — |
+| 10 | Print Spooler & NTLM Relaying | 4648, 4624 | ⬜ Pendiente | — |
+| 11 | Coercing & Unconstrained Delegation | 4768 | ⬜ Pendiente | — |
+| 12 | Object ACLs | 4662, 5136 | ⬜ Pendiente | — |
+| 13 | PKI - ESC1 | 4886, 4887 | ⬜ Pendiente | — |
 
 ---
 
@@ -152,4 +168,9 @@ Los pull requests son bienvenidos.
 
 ---
 
-*Desarrollado por [@JorgeGonzalezVlc](https://github.com/JorgeGonzalezVlc)*
+## Contacto
+
+Si este proyecto te resulta útil o quieres hablar sobre ciberseguridad de Active Directory, blue team o detection engineering, contáctame:
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Jorge%20González-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jorge-gonz%C3%A1lez-gonz%C3%A1lez-5740614b/)
+[![GitHub](https://img.shields.io/badge/GitHub-JorgeGonzalezVlc-181717?logo=github&logoColor=white)](https://github.com/JorgeGonzalezVlc)

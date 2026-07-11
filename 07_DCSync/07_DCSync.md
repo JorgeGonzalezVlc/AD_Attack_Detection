@@ -1,4 +1,4 @@
-# 07 - DCSync (Directory Replication Services Abuse)
+# DCSync (Directory Replication Services Abuse)
 
 > ⚠️ Fines educativos, laboratorio aislado — ver disclaimer completo en el [README](../README.md).
 
@@ -72,7 +72,7 @@ En **DC01**, en **Usuarios y equipos de Active Directory**:
    - **Replicating Directory Changes Filtered**
 8. **Aplicar** → **OK** → **OK**
 
-![Asignando a unai_simon los permisos de replicación de directorio sobre el dominio adlab.local](<img/Damos permisos al usuario dendo de dominio.png>)
+![Asignando a unai_simon los permisos de replicación de directorio sobre el dominio adlab.local](<img/Damos permisos al usuario dentro del dominio.png>)
 
 ---
 

@@ -225,3 +225,8 @@ Get-ADUser -Filter {DoesNotRequirePreAuth -eq $true} -Properties DoesNotRequireP
 ## Archivos
 
 - [`01_detection_ASREProasting.ps1`](01_detection_ASREProasting.ps1) — Módulo de detección PowerShell
+
+---
+
+**Estado**: Completado  
+**Evidencia generada**: Event ID 4768 (Kerberos Authentication, PreAuthType = 0)

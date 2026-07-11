@@ -331,3 +331,8 @@ Get-ADUser -Filter {ServicePrincipalName -like "*"} -Properties ServicePrincipal
 ## Archivos
 
 - [`02_detection_Kerberoasting.ps1`](02_detection_Kerberoasting.ps1) — Módulo de detección PowerShell
+
+---
+
+**Estado**: Completado  
+**Evidencia generada**: Event ID 4769 (Kerberos Service Ticket Request)

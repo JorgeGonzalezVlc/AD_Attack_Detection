@@ -1,4 +1,4 @@
-# 08 - Golden Ticket (Kerberos Authentication Abuse)
+# Golden Ticket (Kerberos Authentication Abuse)
 
 > ⚠️ Fines educativos, laboratorio aislado — ver disclaimer completo en el [README](../README.md).
 
@@ -165,7 +165,7 @@ Vales almacenados en caché: (1)
 	Marcas de caché: 0x1 -> PRIMARY
 ```
 
-![klist mostrando el vale de administrador cargado en la sesión CMD heredada](<img/vemos que tenemos cargado el goldenticket en sesion cmd .png>)
+![klist mostrando el vale de administrador cargado en la sesión CMD heredada](<img/vemos que tenemos cargado el goldenticket en sesion cmd.png>)
 
 **¡¡EL TICKET ESTÁ INYECTADO Y ACTIVO!!**
 
