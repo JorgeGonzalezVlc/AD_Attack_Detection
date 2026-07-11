@@ -1,5 +1,7 @@
 # GPO Permissions / GPO Files (Abuso de permisos de delegación en Group Policy Objects)
 
+> ⚠️ Fines educativos, laboratorio aislado — ver disclaimer completo en el [README](../README.md).
+
 ## Resumen del ataque
 
 Si tengo permisos de **edición** sobre una **Group Policy Object (GPO)**, aunque no sea administrador de dominio, puedo modificar esa GPO para mis fines.

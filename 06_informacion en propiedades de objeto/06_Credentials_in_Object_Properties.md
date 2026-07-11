@@ -1,5 +1,7 @@
 # Credentials in Object Properties (Credenciales expuestas en propiedades de objetos AD)
 
+> ⚠️ Fines educativos, laboratorio aislado — ver disclaimer completo en el [README](../README.md).
+
 ## Resumen del ataque
 
 Las credenciales no solo se encuentran en archivos compartidos, hay veces (aunque es mucho menos frecuente) que también se pueden encontrar directamente en los atributos de objetos Active Directory. Los admins a menudo documentan información sensible en campos como:

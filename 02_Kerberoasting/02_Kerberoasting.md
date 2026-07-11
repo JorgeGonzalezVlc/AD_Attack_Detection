@@ -1,5 +1,7 @@
 # Kerberoasting
 
+> ⚠️ Fines educativos, laboratorio aislado — ver disclaimer completo en el [README](../README.md).
+
 ## ¿Qué es este ataque?
 
 Kerberoasting es una técnica de ataque contra el protocolo Kerberos en Active Directory que permite a un atacante **ya autenticado en el dominio** obtener hashes de contraseñas de cuentas de servicio.

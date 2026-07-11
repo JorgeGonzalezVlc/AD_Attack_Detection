@@ -1,5 +1,7 @@
 # Credentials in Shares (Credenciales expuestas, recursos compartidos de red)
 
+> ⚠️ Fines educativos, laboratorio aislado — ver disclaimer completo en el [README](../README.md).
+
 ## Resumen del ataque
 
 Las credenciales expuestas en recursos compartidos (CIFS/SMB) son probablemente el fallo en configuracion más común en entornos Active Directory. 

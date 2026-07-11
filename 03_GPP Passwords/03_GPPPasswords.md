@@ -1,5 +1,7 @@
 # GPP Passwords
 
+> ⚠️ Fines educativos, laboratorio aislado — ver disclaimer completo en el [README](../README.md).
+
 ## ¿Qué es este ataque?
 
 GPP Passwords explota una vulnerabilidad histórica de las **Group Policy Preferences** (Preferencias de Directiva de Grupo), una función de Windows que permite a los administradores configurar elementos como cuentas locales, tareas programadas, unidades de red o servicios **directamente desde una GPO**, lo que pasa es que antes incluian credenciales.

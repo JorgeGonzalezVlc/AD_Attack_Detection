@@ -1,5 +1,7 @@
 # AS-REProasting
 
+> ⚠️ Fines educativos, laboratorio aislado — ver disclaimer completo en el [README](../README.md).
+
 ## ¿Qué es este ataque?
 
 AS-REProasting es una técnica de ataque contra el protocolo de autenticación Kerberos en entornos Active Directory. Permite a un atacante obtener hashes de contraseñas de cuentas de usuario sin necesidad de estar autenticado en el dominio.
