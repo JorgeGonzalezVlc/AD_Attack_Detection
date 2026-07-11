@@ -55,10 +55,10 @@ El script se ejecuta a las 23:59 cada día y genera un informe con:
 |---|--------|-----------|--------|
 | 01 | AS-REProasting | 4768 | ✅ Completado |
 | 02 | Kerberoasting | 4769 | ✅ Completado |
-| 03 | GPP Passwords | 4688 | ✅ Completado |
-| 04 | GPO Permissions / GPO Files | 5136, 4670 | ✅ Completado |
-| 05 | Credentials in Shares | 5140, 5145 | ✅ Completado |
-| 06 | Credentials in Object Properties | 4662 | ✅ Completado |
+| 03 | GPP Passwords | 5145 | ✅ Completado |
+| 04 | GPO Permissions / GPO Files | 4688, 5136 | ✅ Completado |
+| 05 | Credentials in Shares | 5145 | ✅ Completado |
+| 06 | Credentials in Object Properties | 4624 | ✅ Completado |
 | 07 | DCSync | 4662, 4929 | ⬜ Pendiente |
 | 08 | Golden Ticket | 4768, 4769 | ⬜ Pendiente |
 | 09 | Kerberos Constrained Delegation | 4769 | ⬜ Pendiente |
