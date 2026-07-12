@@ -276,6 +276,15 @@ Get-ChildItem -Path "\\adlab.local\SYSVOL\adlab.local\Policies" -Recurse -Includ
 
 ---
 
+## Lecciones aprendidas / problemas encontrados
+
+- **Primer intento fallido con Drive Maps generado por GUI**: la primera aproximación fue crear la vulnerabilidad completamente desde la GUI (Preferencias → Windows Settings → Drive Maps, mapeando una unidad con credenciales explícitas). En Windows Server 2022, la GUI moderna ya no permite guardar la contraseña en claro: genera el XML con `logonType="S4U"`, un modo que delega la autenticación sin necesitar ni almacenar ninguna contraseña. El resultado es una GPO "vulnerable" que en realidad no contiene ningún `cpassword` que extraer.
+- **Ese fallo llevó a la solución real**: editar manualmente el XML generado por la GUI, cambiando `logonType="S4U"` por `logonType="Password"` y añadiendo un `cpassword` calculado a mano — esto reproduce fielmente cómo eran los XML en entornos anteriores a 2014 (o migrados desde ellos), que es precisamente el escenario que tiene sentido auditar hoy.
+- **La detección requirió activar auditoría desde cero**, a diferencia de los dos ataques anteriores (Kerberos ya venía auditado por defecto en el lab): hubo que activar explícitamente "Auditar recurso compartido de archivos detallado" en la GPO de Controladores de Dominio y configurar una SACL sobre la propia carpeta SYSVOL — sin la SACL, el Event ID 5145 no se genera aunque la directiva de auditoría esté activa.
+- **Decisión consciente de bajar la severidad a MEDIA** en el script de detección: a diferencia de Kerberoasting o AS-REProasting donde un evento ya es una señal fuerte, aquí un administrador legítimo gestionando GPOs genera el mismo patrón de acceso a SYSVOL, así que se optó por depender de la ruta específica accedida y no tratar cada acceso como una alerta crítica automática.
+
+---
+
 ## Archivos
 
 - [`03_detection_GPPPasswords.ps1`](03_detection_GPPPasswords.ps1) — Módulo de detección PowerShell

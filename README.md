@@ -3,7 +3,7 @@
 > Laboratorio propio de Active Directory donde reproduzco ataques reales (Kerberoasting, DCSync, Golden Ticket...) paso a paso y construyo, para cada uno, su detección en PowerShell basada en Event IDs reales de Windows.
 
 ![PowerShell](https://img.shields.io/badge/PowerShell-5.1%2B-5391FE?logo=powershell&logoColor=white)
-![Ataques documentados](https://img.shields.io/badge/Ataques%20documentados-8%2F13-brightgreen)
+![Ataques documentados](https://img.shields.io/badge/Ataques%20documentados-9%2F13-brightgreen)
 ![Enfoque](https://img.shields.io/badge/Enfoque-Blue%20Team%20%2B%20Red%20Team-blue)
 
 ---
@@ -77,7 +77,7 @@ El script se ejecuta a las 23:59 cada día y genera un informe con:
 | 06 | Credentials in Object Properties | 4624 | [Documentación](<06_informacion en propiedades de objeto/06_Credentials_in_Object_Properties.md>) | [Script](<06_informacion en propiedades de objeto/Detect-HoneypotAttack.ps1>) |
 | 07 | DCSync | 4662 | [Documentación](07_DCSync/07_DCSync.md) | [Script](07_DCSync/Detect-DCSync.ps1) |
 | 08 | Golden Ticket | 4768, 4769, 4776 | [Documentación](08_GoldenTicket/08_Golden_Ticket.md) | [Script](08_GoldenTicket/Detect-GoldenTicket.ps1) |
-| 09 | Kerberos Constrained Delegation | 4769 | ⬜ Pendiente | — |
+| 09 | Kerberos Constrained Delegation | 4768, 4769, 4624 | [Documentación](<09_Kerberos Constrained Delegation/09_KerberosConstrainedDelegation.md>) | [Script](<09_Kerberos Constrained Delegation/Detect-KerberosConstrainedDelegation.ps1>) |
 | 10 | Print Spooler & NTLM Relaying | 4648, 4624 | ⬜ Pendiente | — |
 | 11 | Coercing & Unconstrained Delegation | 4768 | ⬜ Pendiente | — |
 | 12 | Object ACLs | 4662, 5136 | ⬜ Pendiente | — |
@@ -146,7 +146,12 @@ AD_Attack_Detection/
 │   ├── Detect-GoldenTicket.ps1
 │   └── img/
 │
-└── (próximos módulos: 09_KerberosConstrainedDelegation, ...)
+├── 09_Kerberos Constrained Delegation/
+│   ├── 09_KerberosConstrainedDelegation.md
+│   ├── Detect-KerberosConstrainedDelegation.ps1
+│   └── img/
+│
+└── (próximos módulos: 10_PrintSpoolerNTLMRelaying, ...)
 ```
 
 ---

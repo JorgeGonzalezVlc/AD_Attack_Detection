@@ -124,7 +124,7 @@ Final Ticket Saved to file!
 **Dentro de Mimikatz**, ejecuta:
 
 ```
-kerberos::ppt golden_final.kirbi
+kerberos::ptt golden_final.kirbi
 ```
 
 **Salida**: `File: 'golden_final.kirbi': OK`
@@ -370,6 +370,19 @@ Kerberos es más seguro:
 ```
 Restrict NTLM: Deny All
 ```
+
+---
+
+## Lecciones aprendidas / problemas encontrados
+
+Este fue, con diferencia, el ataque con más tropiezos prácticos del laboratorio hasta la fecha — vale la pena documentarlos todos porque cada uno por separado es un error fácil de cometer:
+
+- **`kerberos::ppt` no existe, el comando correcto es `kerberos::ptt`** ("Pass The Ticket"). El primer intento de inyectar el ticket falló silenciosamente por este simple error tipográfico.
+- **Error en el SID del dominio por un dígito de menos**: se usó `S-1-5-21-382312521-1313580667-2699790469` (faltaba un "2") en vez del SID real `S-1-5-21-3823122521-1313580667-2699790469`. El ticket se generaba "correctamente" según Mimikatz, pero luego no daba acceso real porque el SID no coincidía con el del dominio — hubo que comparar carácter a carácter el SID usado contra el obtenido con `Get-ADDomain` para encontrar la diferencia.
+- **"Administrator" vs "Administrador"**: el mismo tropiezo que después se repetiría en el ataque 09 (Kerberos Constrained Delegation) — en un dominio en español, la cuenta integrada se llama `Administrador`, no `Administrator`. El ticket se generaba sin error usando `/user:Administrator`, pero no daba ningún acceso porque esa cuenta no existe con ese nombre exacto en `adlab.local`.
+- **El ticket se pierde al cerrar la sesión de Mimikatz**: tras inyectar el ticket con `kerberos::ptt`, si se cierra Mimikatz y se vuelve a abrir, el ticket ya no está disponible — hay que reinyectarlo (`kerberos::ptt golden_final.kirbi`) en cada nueva sesión, o mejor, usar `misc::cmd` **sin salir de Mimikatz** para abrir una CMD que herede el ticket y pueda usarse fuera de la sesión de Mimikatz en sí.
+- **`dir \\DC01\...` no sirve para comprobar el ticket, pero `net view` sí**: comandos como `dir` sobre una ruta UNC, `tasklist \\host` o `net use Z:` fallaron o no eran aplicables en este contexto, generando confusión sobre si el ticket realmente funcionaba. La prueba que finalmente confirmó el privilegio de Domain Admin fue `net view \\100.100.100.50`, que mostró las compartidas administrativas del DC (`NETLOGON`, `Scripts`, `SYSVOL`) — algo que solo es visible con privilegios de administrador sobre esa máquina. Es importante notar que `whoami` seguía mostrando el usuario de la sesión Windows real (`unai_simon`), no `administrador`: el Golden Ticket vive en el **caché Kerberos**, no cambia la identidad de la sesión de Windows en sí.
+- En conjunto, estos tropiezos (typo de comando, dígito de menos en el SID, e idioma de la cuenta) muestran que **un Golden Ticket "generado sin errores" no implica que funcione** — Mimikatz no valida que el SID o el usuario existan realmente en el dominio, así que la única forma fiable de confirmar el ataque es probar acceso real a un recurso administrativo del DC.
 
 ---
 
