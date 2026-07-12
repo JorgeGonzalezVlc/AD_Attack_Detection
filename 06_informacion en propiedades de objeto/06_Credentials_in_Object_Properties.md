@@ -1,6 +1,6 @@
 # Credentials in Object Properties (Credenciales expuestas en propiedades de objetos AD)
 
-> ⚠️ Fines educativos, laboratorio aislado — ver disclaimer completo en el [README](../README.md).
+> ⚠️ Fines educativos, laboratorio aislado, ver disclaimer completo en el [README](../README.md).
 
 ## Resumen del ataque
 

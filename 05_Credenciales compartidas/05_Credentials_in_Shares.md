@@ -1,6 +1,6 @@
 # Credentials in Shares (Credenciales expuestas, recursos compartidos de red)
 
-> ⚠️ Fines educativos, laboratorio aislado — ver disclaimer completo en el [README](../README.md).
+> ⚠️ Fines educativos, laboratorio aislado, ver disclaimer completo en el [README](../README.md).
 
 ## Resumen del ataque
 
@@ -377,10 +377,10 @@ Get-ChildItem -Path "\\*\*$" -Recurse -Filter "*.ps1", "*.bat", "*.config" |
 
 ## Lecciones aprendidas / problemas encontrados
 
-- **La primera versión del ataque asumía que el atacante ya sabía que `\\DC01\scripts` existía**, lo cual no es realista — un atacante real no conoce de antemano ni el nombre del recurso compartido ni, muchas veces, el nombre del propio servidor. Esto llevó a replantear la metodología para incluir primero el **descubrimiento** (`net view \\DC01`) antes de asumir acceso directo a la compartida.
+- **La primera versión del ataque asumía que el atacante ya sabía que `\\DC01\scripts` existía**, lo cual no es realista, un atacante real no conoce de antemano ni el nombre del recurso compartido ni, muchas veces, el nombre del propio servidor. Esto llevó a replantear la metodología para incluir primero el **descubrimiento** (`net view \\DC01`) antes de asumir acceso directo a la compartida.
 - **Ni siquiera el nombre del DC debería darse por hecho**: se planteó explícitamente que en un dominio real puede haber varios Domain Controllers, y las compartidas interesantes podrían estar en cualquiera de ellos, no necesariamente en el que el atacante conoce de entrada. La forma correcta de simularlo con más realismo sería primero enumerar los DCs del dominio (por ejemplo con `[System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().DomainControllers` o herramientas como PowerView/CrackMapExec) y después escanear cada uno en busca de shares, en vez de ir directos a `\\DC01`.
-- Se documentó explícitamente que en un ataque real esto se automatizaría con herramientas como **PowerView** (`Invoke-ShareFinder`) o **CrackMapExec** (`--shares`) en lugar de `net view` manual contra un único host — el `net view` manual del lab es la versión didáctica y simplificada de un escaneo real a gran escala.
-- Se insistió, igual que en otros ataques, en la importancia de **no tratar cada acceso a la compartida como una alerta** — el reto de detección aquí es más de correlación de volumen/frecuencia que de un único evento, ya documentado en las tablas de umbrales (MEDIA/GRAVE) del script.
+- Se documentó explícitamente que en un ataque real esto se automatizaría con herramientas como **PowerView** (`Invoke-ShareFinder`) o **CrackMapExec** (`--shares`) en lugar de `net view` manual contra un único host, el `net view` manual del lab es la versión didáctica y simplificada de un escaneo real a gran escala.
+- Se insistió, igual que en otros ataques, en la importancia de **no tratar cada acceso a la compartida como una alerta**, el reto de detección aquí es más de correlación de volumen/frecuencia que de un único evento, ya documentado en las tablas de umbrales (MEDIA/GRAVE) del script.
 
 ## Notas importantes
 

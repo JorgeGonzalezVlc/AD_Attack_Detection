@@ -1,6 +1,6 @@
 # AS-REProasting
 
-> ⚠️ Fines educativos, laboratorio aislado — ver disclaimer completo en el [README](../README.md).
+> ⚠️ Fines educativos, laboratorio aislado, ver disclaimer completo en el [README](../README.md).
 
 ## ¿Qué es este ataque?
 
@@ -227,15 +227,15 @@ Get-ADUser -Filter {DoesNotRequirePreAuth -eq $true} -Properties DoesNotRequireP
 Este fue el primer ataque del proyecto, así que la mayor parte del "tropiezo" fue de metodología y organización más que técnico:
 
 - **Decidir la estructura del repo sobre la marcha**: al terminar este ataque se definió que el proyecto generaría un `.md` independiente por cada técnica (en vez de un único documento gigante), estructura que se ha mantenido para el resto de ataques del módulo.
-- **Kerberoasting no estaba en la lista inicial de ataques**: se añadió justo después de completar este, al darse cuenta de que AS-REProasting (sin autenticación previa) y Kerberoasting (requiere credenciales) son técnicas distintas que merecían entradas separadas — de ahí que Kerberoasting quedara como ataque 02 en vez de ir después de otros.
-- **Windows Defender**, como pasaría en casi todos los ataques posteriores del módulo, tuvo que desactivarse en WS01 para poder descargar y ejecutar Rubeus sin que lo eliminara — la primera vez que aparece este patrón, que se repetiría en Golden Ticket, GPO Permissions y Kerberos Constrained Delegation.
+- **Kerberoasting no estaba en la lista inicial de ataques**: se añadió justo después de completar este, al darse cuenta de que AS-REProasting (sin autenticación previa) y Kerberoasting (requiere credenciales) son técnicas distintas que merecían entradas separadas, de ahí que Kerberoasting quedara como ataque 02 en vez de ir después de otros.
+- **Windows Defender**, como pasaría en casi todos los ataques posteriores del módulo, tuvo que desactivarse en WS01 para poder descargar y ejecutar Rubeus sin que lo eliminara, la primera vez que aparece este patrón, que se repetiría en Golden Ticket, GPO Permissions y Kerberos Constrained Delegation.
 - A diferencia de ataques posteriores (como GPP Passwords o Credentials in Shares), aquí **no hizo falta activar auditoría avanzada manualmente**: el Event ID 4768 con `PreAuthType = 0` ya se registraba con la auditoría de Kerberos por defecto del laboratorio.
 
 ---
 
 ## Archivos
 
-- [`01_detection_ASREProasting.ps1`](01_detection_ASREProasting.ps1) — Módulo de detección PowerShell
+- [`01_detection_ASREProasting.ps1`](01_detection_ASREProasting.ps1): Módulo de detección PowerShell
 
 ---
 

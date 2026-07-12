@@ -1,6 +1,6 @@
 # DCSync (Directory Replication Services Abuse)
 
-> ⚠️ Fines educativos, laboratorio aislado — ver disclaimer completo en el [README](../README.md).
+> ⚠️ Fines educativos, laboratorio aislado, ver disclaimer completo en el [README](../README.md).
 
 ## Resumen del ataque
 
@@ -186,11 +186,11 @@ Operación:
 
 ### Señales de alarma:
 
-1. ✅ **Usuario normal haciendo DCSync** — Solo DCs deberían pedir replicación
-2. ✅ **Acceso a domainDNS** — Intenta obtener toda la BD de AD
-3. ✅ **Múltiples Event ID 4662 rápidamente** — Usuario extrayendo hashes
-4. ✅ **Acceso con máscara 0x100 (Control Access)** — Solicitud de replicación
-5. ✅ **Usuario sin permisos de replicación legítimos** — Debería rechazarse
+1. ✅ **Usuario normal haciendo DCSync**: Solo DCs deberían pedir replicación
+2. ✅ **Acceso a domainDNS**: Intenta obtener toda la BD de AD
+3. ✅ **Múltiples Event ID 4662 rápidamente**: Usuario extrayendo hashes
+4. ✅ **Acceso con máscara 0x100 (Control Access)**: Solicitud de replicación
+5. ✅ **Usuario sin permisos de replicación legítimos**: Debería rechazarse
 
 ---
 
@@ -344,19 +344,19 @@ Separar cuentas por nivel de críticidad y limitar permisos.
 
 ## Lecciones aprendidas / problemas encontrados
 
-- **La auditoría "Directory Service Access" no estaba activa por defecto**: el primer intento de generar el Event ID 4662 no dejó ningún rastro en el log ("no estan los logs"). Hubo que activar explícitamente la subcategoría en la GPO (`Configuración del equipo → Directivas → Ajustes de Windows → Ajustes de seguridad → Configuración avanzada de políticas de auditoría → Acceso DS → "Auditar acceso al servicio de directorio"`, marcando Éxito y Error), aplicar con `gpupdate /force`, y **reiniciar DC01 por completo** — el simple `gpupdate` no fue suficiente para que la nueva auditoría surtiera efecto sobre el propio proceso de replicación del DC.
-- **Discusión útil sobre el realismo del escenario**: surgió la duda legítima de "¿por qué un usuario normal iba a tener permisos de replicación?" — algo que a primera vista parece una configuración absurda. La respuesta quedó documentada como parte del valor educativo del ataque: en la práctica esto ocurre por errores de administración, por cuentas de servicio "huérfanas" (creadas para una integración o backup que ya no existe, con permisos nunca revocados), o como resultado de una escalada de privilegios previa donde el atacante ya modificó ACLs del dominio. Precisamente porque un usuario normal *nunca* debería tener este permiso, su presencia es en sí misma una señal de alarma grave incluso antes de que se ejecute el ataque.
-- Se comprobó, tras activar la auditoría y reiniciar, que tanto el intento con **Mimikatz** (Windows) como el de **Crackmapexec** (Kali) generan el mismo tipo de evidencia (Event ID 4662 con `ObjectType: domainDNS` y `AccessMask: 0x100`), independientemente de la herramienta usada — el rastro lo deja el protocolo de replicación en sí, no la herramienta concreta.
+- **La auditoría "Directory Service Access" no estaba activa por defecto**: el primer intento de generar el Event ID 4662 no dejó ningún rastro en el log ("no estan los logs"). Hubo que activar explícitamente la subcategoría en la GPO (`Configuración del equipo → Directivas → Ajustes de Windows → Ajustes de seguridad → Configuración avanzada de políticas de auditoría → Acceso DS → "Auditar acceso al servicio de directorio"`, marcando Éxito y Error), aplicar con `gpupdate /force`, y **reiniciar DC01 por completo**, el simple `gpupdate` no fue suficiente para que la nueva auditoría surtiera efecto sobre el propio proceso de replicación del DC.
+- **Discusión útil sobre el realismo del escenario**: surgió la duda legítima de "¿por qué un usuario normal iba a tener permisos de replicación?", algo que a primera vista parece una configuración absurda. La respuesta quedó documentada como parte del valor educativo del ataque: en la práctica esto ocurre por errores de administración, por cuentas de servicio "huérfanas" (creadas para una integración o backup que ya no existe, con permisos nunca revocados), o como resultado de una escalada de privilegios previa donde el atacante ya modificó ACLs del dominio. Precisamente porque un usuario normal *nunca* debería tener este permiso, su presencia es en sí misma una señal de alarma grave incluso antes de que se ejecute el ataque.
+- Se comprobó, tras activar la auditoría y reiniciar, que tanto el intento con **Mimikatz** (Windows) como el de **Crackmapexec** (Kali) generan el mismo tipo de evidencia (Event ID 4662 con `ObjectType: domainDNS` y `AccessMask: 0x100`), independientemente de la herramienta usada, el rastro lo deja el protocolo de replicación en sí, no la herramienta concreta.
 
 ---
 
 ## Notas importantes
 
-1. **No es sigiloso** — Event ID 4662 es generado cada vez que se hace DCSync. Cualquier auditoría básica lo detecta.
+1. **No es sigiloso**: Event ID 4662 es generado cada vez que se hace DCSync. Cualquier auditoría básica lo detecta.
 
-2. **Pero es efectivo** — Muchas organizaciones **no monitorean Event ID 4662**, así que el ataque pasa desapercibido.
+2. **Pero es efectivo**: Muchas organizaciones **no monitorean Event ID 4662**, así que el ataque pasa desapercibido.
 
-3. **Los hashes extraídos son valiosos** — Permitir crear:
+3. **Los hashes extraídos son valiosos**: Permitir crear:
    - **Golden Tickets** (ser cualquier usuario por siempre)
    - **Pass-the-Hash** (autenticarse como cualquier usuario)
    - **Crackear offline** (Hashcat contra hashes débiles)

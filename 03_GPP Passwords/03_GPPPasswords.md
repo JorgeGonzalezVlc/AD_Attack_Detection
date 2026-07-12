@@ -1,6 +1,6 @@
 # GPP Passwords
 
-> ⚠️ Fines educativos, laboratorio aislado — ver disclaimer completo en el [README](../README.md).
+> ⚠️ Fines educativos, laboratorio aislado, ver disclaimer completo en el [README](../README.md).
 
 ## ¿Qué es este ataque?
 
@@ -26,7 +26,7 @@ Descifra la contraseña con la clave pública conocida
 
 ## ¿Por qué existe esta vulnerabilidad?
 
-El fallo nace de una contradicción de diseño: para que el **cliente** Windows pudiera descifrar la contraseña y usarla, necesitaba conocer la clave de cifrado. El problema es que esa clave es **simétrica** (la misma para cifrar y descifrar) y Microsoft la publicó en su propia documentación pública — lo que significa que cualquier usuario del dominio puede leer el XML con la contraseña cifrada en `\\DC01\SYSVOL\adlab.local\Policies\{GUID}\Machine\Preferences\ScheduledTasks\ScheduledTasks.xml` y descifrarla con la clave conocida. Tienes el resultado cifrado y la llave: no hay secreto.
+El fallo nace de una contradicción de diseño: para que el **cliente** Windows pudiera descifrar la contraseña y usarla, necesitaba conocer la clave de cifrado. El problema es que esa clave es **simétrica** (la misma para cifrar y descifrar) y Microsoft la publicó en su propia documentación pública, lo que significa que cualquier usuario del dominio puede leer el XML con la contraseña cifrada en `\\DC01\SYSVOL\adlab.local\Policies\{GUID}\Machine\Preferences\ScheduledTasks\ScheduledTasks.xml` y descifrarla con la clave conocida. Tienes el resultado cifrado y la llave: no hay secreto.
 
 > *"All passwords are encrypted using a derived Advanced Encryption Standard (AES) key. The 32-byte AES key is as follows: `4e 99 06 e8 fc b6 6c c9 fa f4 93 10 62 0f fe e8 f4 96 e8 06 cc 05 79 90 20 9b 09 a4 33 b6 6c 1b`"*
 >
@@ -279,15 +279,15 @@ Get-ChildItem -Path "\\adlab.local\SYSVOL\adlab.local\Policies" -Recurse -Includ
 ## Lecciones aprendidas / problemas encontrados
 
 - **Primer intento fallido con Drive Maps generado por GUI**: la primera aproximación fue crear la vulnerabilidad completamente desde la GUI (Preferencias → Windows Settings → Drive Maps, mapeando una unidad con credenciales explícitas). En Windows Server 2022, la GUI moderna ya no permite guardar la contraseña en claro: genera el XML con `logonType="S4U"`, un modo que delega la autenticación sin necesitar ni almacenar ninguna contraseña. El resultado es una GPO "vulnerable" que en realidad no contiene ningún `cpassword` que extraer.
-- **Ese fallo llevó a la solución real**: editar manualmente el XML generado por la GUI, cambiando `logonType="S4U"` por `logonType="Password"` y añadiendo un `cpassword` calculado a mano — esto reproduce fielmente cómo eran los XML en entornos anteriores a 2014 (o migrados desde ellos), que es precisamente el escenario que tiene sentido auditar hoy.
-- **La detección requirió activar auditoría desde cero**, a diferencia de los dos ataques anteriores (Kerberos ya venía auditado por defecto en el lab): hubo que activar explícitamente "Auditar recurso compartido de archivos detallado" en la GPO de Controladores de Dominio y configurar una SACL sobre la propia carpeta SYSVOL — sin la SACL, el Event ID 5145 no se genera aunque la directiva de auditoría esté activa.
+- **Ese fallo llevó a la solución real**: editar manualmente el XML generado por la GUI, cambiando `logonType="S4U"` por `logonType="Password"` y añadiendo un `cpassword` calculado a mano, esto reproduce fielmente cómo eran los XML en entornos anteriores a 2014 (o migrados desde ellos), que es precisamente el escenario que tiene sentido auditar hoy.
+- **La detección requirió activar auditoría desde cero**, a diferencia de los dos ataques anteriores (Kerberos ya venía auditado por defecto en el lab): hubo que activar explícitamente "Auditar recurso compartido de archivos detallado" en la GPO de Controladores de Dominio y configurar una SACL sobre la propia carpeta SYSVOL, sin la SACL, el Event ID 5145 no se genera aunque la directiva de auditoría esté activa.
 - **Decisión consciente de bajar la severidad a MEDIA** en el script de detección: a diferencia de Kerberoasting o AS-REProasting donde un evento ya es una señal fuerte, aquí un administrador legítimo gestionando GPOs genera el mismo patrón de acceso a SYSVOL, así que se optó por depender de la ruta específica accedida y no tratar cada acceso como una alerta crítica automática.
 
 ---
 
 ## Archivos
 
-- [`03_detection_GPPPasswords.ps1`](03_detection_GPPPasswords.ps1) — Módulo de detección PowerShell
+- [`03_detection_GPPPasswords.ps1`](03_detection_GPPPasswords.ps1): Módulo de detección PowerShell
 
 ---
 

@@ -1,6 +1,6 @@
 # Kerberos Constrained Delegation
 
-> ⚠️ Fines educativos, laboratorio aislado — ver disclaimer completo en el [README](../README.md).
+> ⚠️ Fines educativos, laboratorio aislado, ver disclaimer completo en el [README](../README.md).
 
 ## Índice
 1. Descripción
@@ -20,7 +20,7 @@
 
 La delegación permite que un servicio intermedio (por ejemplo, un servidor web) actúe **en nombre de un usuario** frente a un tercer servicio (por ejemplo, una base de datos), sin necesitar la contraseña de ese usuario. Es la solución de Microsoft al problema clásico de las arquitecturas de 3 capas: *Usuario → Servicio A → Servicio B*.
 
-Analogía: un recepcionista de hotel (servicio intermedio) que llama al spa (servicio final) y dice "te mando a un cliente VIP nuestro, trátalo como si fuera él" — el spa nunca habla directamente con el cliente, confía en el recepcionista.
+Analogía: un recepcionista de hotel (servicio intermedio) que llama al spa (servicio final) y dice "te mando a un cliente VIP nuestro, trátalo como si fuera él", el spa nunca habla directamente con el cliente, confía en el recepcionista.
 
 ### 1.2 Tipos de delegación
 
@@ -36,7 +36,7 @@ Cuando se configura, hay que especificar dos cosas:
 1. **Hacia qué máquina/cuenta** puede delegar (en este lab: `DC01`)
 2. **Hacia qué servicio concreto** de esa máquina (en este lab: `cifs`, no todos los servicios que ofrece DC01)
 
-Todo lo que no está explícitamente en `msDS-AllowedToDelegateTo` está prohibido por defecto — de ahí el nombre "constrained" (restringida/constreñida).
+Todo lo que no está explícitamente en `msDS-AllowedToDelegateTo` está prohibido por defecto, de ahí el nombre "constrained" (restringida/constreñida).
 
 ### 1.4 "Usar solamente Kerberos" vs. "Usar cualquier protocolo de autenticación"
 
@@ -56,7 +56,7 @@ Resultado: un ticket válido del usuario impersonado para el servicio de destino
 
 ### 1.6 SPN: prerrequisito técnico
 
-Un **SPN (Service Principal Name)** identifica de forma única un servicio en Kerberos (`clase_servicio/host:puerto`). Es necesario que una cuenta tenga al menos un SPN para que la pestaña "Delegación" esté disponible en su configuración — Windows interpreta la presencia de un SPN como "esta cuenta representa un servicio".
+Un **SPN (Service Principal Name)** identifica de forma única un servicio en Kerberos (`clase_servicio/host:puerto`). Es necesario que una cuenta tenga al menos un SPN para que la pestaña "Delegación" esté disponible en su configuración, Windows interpreta la presencia de un SPN como "esta cuenta representa un servicio".
 
 Ejemplos de clases de servicio: `HTTP`, `CIFS`, `LDAP`, `MSSQLSvc`, `HOST`, `TERMSRV`, `WSMAN`, `krbtgt`.
 
@@ -184,7 +184,7 @@ rc4_hmac : 2B576ACBE6BCFDA7294D6BD18041B8FE
 
 ### 4.3 Ataque S4U (S4U2Self + S4U2Proxy)
 
-Primer intento, con la contraseña entre comillas simples — falla con `KDC_ERR_PREAUTH_FAILED` porque Rubeus interpreta las comillas como parte literal de la contraseña (ver [Lecciones aprendidas](#8-lecciones-aprendidas--problemas-encontrados-durante-el-montaje)):
+Primer intento, con la contraseña entre comillas simples, falla con `KDC_ERR_PREAUTH_FAILED` porque Rubeus interpreta las comillas como parte literal de la contraseña (ver [Lecciones aprendidas](#8-lecciones-aprendidas--problemas-encontrados-durante-el-montaje)):
 
 ![Error KDC_ERR_PREAUTH_FAILED al calcular el hash con la contraseña entre comillas simples](<img/error a la hora de autenticar con hash.png>)
 
@@ -290,7 +290,7 @@ Proceso de inicio de sesión: Kerberos
 
 ![Evento 4624 en el Visor de eventos de DC01: logon final como administrador con nivel de suplantación](<img/log 4624.png>)
 
-> En este lab, el campo "Servicios transitados" del evento 4624 no mostró contenido visible en la vista general — la evidencia principal de la delegación quedó registrada en el 4769 correspondiente. **Se recomienda correlacionar 4769 + 4624 por proximidad temporal y por la IP de origen**, no depender de un único evento.
+> En este lab, el campo "Servicios transitados" del evento 4624 no mostró contenido visible en la vista general, la evidencia principal de la delegación quedó registrada en el 4769 correspondiente. **Se recomienda correlacionar 4769 + 4624 por proximidad temporal y por la IP de origen**, no depender de un único evento.
 
 ### Bonus — Evidencia de intentos fallidos previos
 
@@ -316,12 +316,12 @@ Ver script [`Detect-KerberosConstrainedDelegation.ps1`](Detect-KerberosConstrain
 ## 7. Prevención
 
 1. **Marcar las cuentas privilegiadas como "La cuenta es confidencial y no se puede delegar"** (`Account is sensitive and cannot be delegated`), en la pestaña Cuenta de sus propiedades.
-2. **Añadir cuentas privilegiadas al grupo `Protected Users`** — aplica automáticamente la protección anterior, aunque debe evaluarse su impacto antes de implementarlo en producción.
+2. **Añadir cuentas privilegiadas al grupo `Protected Users`**: aplica automáticamente la protección anterior, aunque debe evaluarse su impacto antes de implementarlo en producción.
 3. **Auditar periódicamente `msDS-AllowedToDelegateTo`** en todo el dominio para detectar delegaciones no autorizadas:
    ```powershell
    Get-ADObject -LDAPFilter "(msDS-AllowedToDelegateTo=*)" -Properties msDS-AllowedToDelegateTo
    ```
-4. **Tratar cualquier cuenta con delegación configurada como extremadamente privilegiada**, independientemente de sus permisos nominales — su contraseña debe ser fuerte y rotar con frecuencia (para no depender de que además sea vulnerable a Kerberoasting).
+4. **Tratar cualquier cuenta con delegación configurada como extremadamente privilegiada**, independientemente de sus permisos nominales, su contraseña debe ser fuerte y rotar con frecuencia (para no depender de que además sea vulnerable a Kerberoasting).
 5. Preferir, cuando sea posible, **Resource-Based Constrained Delegation** en lugar de la clásica, y evitar "Usar cualquier protocolo de autenticación" salvo necesidad real de protocol transition.
 
 ---
@@ -335,6 +335,30 @@ Ver script [`Detect-KerberosConstrainedDelegation.ps1`](Detect-KerberosConstrain
 | `KDC_ERR_C_PRINCIPAL_UNKNOWN` en S4U2Self | Se usó `/impersonateuser:Administrator` (inglés), pero la cuenta real del dominio es `administrador` (español) | Usar el `SamAccountName` real, verificado con `Get-ADUser Administrador` |
 | `KDC_ERR_S_PRINCIPAL_UNKNOWN` en S4U2Proxy | El SPN se pasó con comillas escapadas innecesarias (`` /msdsspn:`"cifs/DC01.adlab.local`" ``), quedando literalmente con comillas dentro del valor | Como el SPN no tiene espacios, no necesita comillas: `/msdsspn:cifs/DC01.adlab.local` |
 | Import-Module se pierde entre sesiones | `Set-ExecutionPolicy -Scope Process` y el módulo importado solo viven en la sesión de PowerShell activa | Repetir la secuencia completa (`Set-ExecutionPolicy` + `cd` + `Import-Module`) en cada nueva consola |
+
+---
+
+## Notas importantes
+
+1. **No es un exploit de software**, es un abuso de una función legítima de Kerberos (delegación), igual que Golden Ticket abusa del protocolo en sí.
+
+2. **Requiere dos precondiciones simultáneas**, un SPN en la cuenta y `TRUSTED_TO_AUTH_FOR_DELEGATION` activo. Si falta cualquiera de las dos, el ataque no es posible.
+
+3. **El rastro forense no está donde se esperaría**, el campo "Nombre de cuenta" del evento 4769 sigue mostrando la cuenta delegante, nunca la impersonada. La única prueba explícita está en "Servicios transitados".
+
+4. **Es la segunda fase de una cadena de compromiso, no el punto de entrada**, necesita una cuenta ya comprometida previamente.
+
+5. **Diferencia clave con Kerberoasting**, aquí no se crackea nada offline, se salta directo a impersonar sin necesitar el hash ni la contraseña del usuario objetivo.
+
+---
+
+## Referencias
+
+- [Microsoft: S4U2Self and S4U2Proxy](https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-constrained-delegation-overview)
+- [Microsoft: Event ID 4769](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4769)
+- [Microsoft: Event ID 4768](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4768)
+- [adsecurity.org: Kerberos & KRBTGT](https://adsecurity.org/?p=483)
+- [harmj0y: S4U2Pwnage](https://harmj0y.medium.com/s4u2pwnage-36585c1c8e01)
 
 ---
 

@@ -19,8 +19,8 @@
 
 Este repo no es una recopilación de teoría: es el registro de un laboratorio de AD montado, atacado y defendido de principio a fin por mí. Concretamente, cada módulo demuestra:
 
-- **Entendimiento real de Kerberos/NTLM y sus abusos** — AS-REP Roasting, Kerberoasting, DCSync y Golden Ticket no descritos de oídas, sino ejecutados contra un DC propio con Mimikatz, Rubeus, Impacket y Crackmapexec.
-- **Detection engineering aplicado**, no solo teoría de IoCs: cada ataque termina en un script PowerShell funcional que consulta el Visor de eventos (`Get-WinEvent`), filtra por Event ID real y genera alertas — sin depender de un SIEM de pago.
+- **Entendimiento real de Kerberos/NTLM y sus abusos**: AS-REP Roasting, Kerberoasting, DCSync y Golden Ticket no descritos de oídas, sino ejecutados contra un DC propio con Mimikatz, Rubeus, Impacket y Crackmapexec.
+- **Detection engineering aplicado**, no solo teoría de IoCs: cada ataque termina en un script PowerShell funcional que consulta el Visor de eventos (`Get-WinEvent`), filtra por Event ID real y genera alertas, sin depender de un SIEM de pago.
 - **Doble perspectiva ofensiva/defensiva** sobre el mismo entorno: ejecuto el ataque desde el rol de atacante (Kali/WS01) y después me pongo del lado del defensor para diseñar la detección y el hardening.
 - **Autonomía de infraestructura**: el laboratorio (DC, cliente Windows, atacante Kali) está montado, configurado y documentado por mí, incluyendo la activación de las políticas de auditoría necesarias para que cada evento se genere.
 - **Comunicación técnica clara**: cada módulo sigue la misma estructura (teoría → ataque reproducible → evidencia real en capturas → IoCs → detección → mitigación), pensada para que cualquier compañero de equipo pueda seguirla sin contexto previo.

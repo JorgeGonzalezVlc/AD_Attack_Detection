@@ -1,6 +1,6 @@
 # Kerberoasting
 
-> ⚠️ Fines educativos, laboratorio aislado — ver disclaimer completo en el [README](../README.md).
+> ⚠️ Fines educativos, laboratorio aislado, ver disclaimer completo en el [README](../README.md).
 
 ## ¿Qué es este ataque?
 
@@ -330,17 +330,17 @@ Get-ADUser -Filter {ServicePrincipalName -like "*"} -Properties ServicePrincipal
 
 ## Lecciones aprendidas / problemas encontrados
 
-- **Preparar el "señuelo" antes que el SPN**: a diferencia de otros ataques donde basta con tocar un atributo de AD, aquí hizo falta instalar SQL Server 2019 Express de verdad y validar la conexión real (vía SSMS y `sys.dm_exec_connections`) antes de registrar el SPN — de lo contrario el SPN apunta a un servicio que no existe, algo poco realista y menos convincente para la demo.
+- **Preparar el "señuelo" antes que el SPN**: a diferencia de otros ataques donde basta con tocar un atributo de AD, aquí hizo falta instalar SQL Server 2019 Express de verdad y validar la conexión real (vía SSMS y `sys.dm_exec_connections`) antes de registrar el SPN, de lo contrario el SPN apunta a un servicio que no existe, algo poco realista y menos convincente para la demo.
 - **Nunca ejecutar Rubeus con la propia cuenta objetivo**: Rubeus no puede solicitarse un ticket kerberoasteable a sí mismo, así que el ataque se lanzó siempre desde `lamine` (cuenta distinta a `svc_sql`), no desde la cuenta de servicio vulnerable.
 - **Elegir `/rc4opsec` conscientemente**: sin este flag, Rubeus habría intentado cifrar el ticket con AES si la cuenta lo soporta, lo que habría hecho el hash mucho más lento de crackear y menos fiel al patrón "legacy" que se buscaba mostrar en el laboratorio.
 - Igual que en AS-REProasting, hubo que **desactivar Windows Defender temporalmente** en WS01 (`Set-MpPreference -DisableRealtimeMonitoring $true`) para poder ejecutar Rubeus sin que lo bloqueara.
-- Confirmado el patrón, ya mencionado en AS-REProasting, de que **un solo evento con cifrado RC4 no basta como prueba** — aquí se hizo aún más explícito al ver 201 eventos 4769 generados en el log real, reforzando que la severidad se basa en volumen, no en un único hallazgo.
+- Confirmado el patrón, ya mencionado en AS-REProasting, de que **un solo evento con cifrado RC4 no basta como prueba**, aquí se hizo aún más explícito al ver 201 eventos 4769 generados en el log real, reforzando que la severidad se basa en volumen, no en un único hallazgo.
 
 ---
 
 ## Archivos
 
-- [`02_detection_Kerberoasting.ps1`](02_detection_Kerberoasting.ps1) — Módulo de detección PowerShell
+- [`02_detection_Kerberoasting.ps1`](02_detection_Kerberoasting.ps1): Módulo de detección PowerShell
 
 ---
 
