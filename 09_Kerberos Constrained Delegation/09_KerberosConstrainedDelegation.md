@@ -84,7 +84,7 @@ A diferencia de **Kerberoasting** (ataque 02), donde se crackea offline el hash 
 
 ---
 
-## 3. Configuración de la vulnerabilidad (Paso 1 — GUI en DC01)
+## 3. Configuración de la vulnerabilidad (Paso 1: GUI en DC01)
 
 ### 3.1 Asignar un SPN a `cucurella`
 
@@ -143,7 +143,7 @@ Configuración del equipo → Directivas → Configuración de Windows → Confi
 
 ---
 
-## 4. Ejecución del ataque (Paso 2 — JORGE-CLIENTE)
+## 4. Ejecución del ataque (Paso 2: JORGE-CLIENTE)
 
 ### 4.1 Obtención de la herramienta
 
@@ -248,9 +248,9 @@ Windows
 
 ---
 
-## 5. Evidencia en logs (Paso 3 — Visor de eventos, DC01\Security)
+## 5. Evidencia en logs (Paso 3: Visor de eventos, DC01\Security)
 
-### Evento 4768 — Solicitud de TGT (11:28:36)
+### Evento 4768: Solicitud de TGT (11:28:36)
 ```
 Nombre de cuenta:        cucurella
 Dirección de cliente:    ::ffff:100.100.100.40   (JORGE-CLIENTE)
@@ -259,14 +259,14 @@ Tipo de cifrado de vale: 0x17  (RC4-HMAC)
 
 ![Evento 4768 en el Visor de eventos de DC01: solicitud de TGT de cucurella desde JORGE-CLIENTE](<img/log 4768.png>)
 
-### Evento 4769 (#1) — S4U2Self (11:28:36, puerto 49953)
+### Evento 4769 (#1): S4U2Self (11:28:36, puerto 49953)
 ```
 Nombre de cuenta:      cucurella@ADLAB.LOCAL
 Nombre de servicio:    cucurella   (la cuenta se pide un ticket a sí misma)
 Servicios transitados: -   (vacío en este primer paso)
 ```
 
-### Evento 4769 (#2) — S4U2Proxy (11:28:36, puerto 49954) 🚩 CLAVE
+### Evento 4769 (#2): S4U2Proxy (11:28:36, puerto 49954) 🚩 CLAVE
 ```
 Nombre de cuenta:      cucurella@ADLAB.LOCAL
 Nombre de servicio:    DC01$
@@ -277,7 +277,7 @@ Servicios transitados: cucurella@ADLAB.LOCAL   ← huella dactilar de la delegac
 
 > Importante: el campo **"Nombre de cuenta"** sigue mostrando `cucurella`, no `administrador`, incluso en la petición del servicio final. El único lugar donde queda constancia explícita de la suplantación es el campo **"Servicios transitados"**.
 
-### Evento 4624 — Logon final en DC01 (11:31:30)
+### Evento 4624: Logon final en DC01 (11:31:30)
 ```
 Nuevo inicio de sesión:
   Nombre de cuenta:         administrador
@@ -292,7 +292,7 @@ Proceso de inicio de sesión: Kerberos
 
 > En este lab, el campo "Servicios transitados" del evento 4624 no mostró contenido visible en la vista general, la evidencia principal de la delegación quedó registrada en el 4769 correspondiente. **Se recomienda correlacionar 4769 + 4624 por proximidad temporal y por la IP de origen**, no depender de un único evento.
 
-### Bonus — Evidencia de intentos fallidos previos
+### Bonus: Evidencia de intentos fallidos previos
 
 Durante las pruebas se generaron eventos 4769 con `Código de error: 0x6` (`KDC_ERR_C_PRINCIPAL_UNKNOWN`) al intentar impersonar a un usuario `Administrator` (en inglés) que no existe en este dominio (la cuenta real es `administrador`). **Múltiples eventos 4769 con código de error 0x6 para la misma cuenta origen, en un periodo corto de tiempo, es en sí mismo un patrón sospechoso** (indicio de un atacante probando nombres de usuario a ciegas).
 

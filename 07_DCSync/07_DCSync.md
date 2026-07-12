@@ -43,7 +43,7 @@ Evidencia:         Event ID 4662 (Directory Service Access)
 
 ---
 
-## Paso 1 — Preparar usuario con permisos de replicación
+## Paso 1: Preparar usuario con permisos de replicación
 
 ### 1.1 Crear usuario vulnerable
 
@@ -76,7 +76,7 @@ En **DC01**, en **Usuarios y equipos de Active Directory**:
 
 ---
 
-## Paso 2 — DCSync con Mimikatz (Windows)
+## Paso 2: DCSync con Mimikatz (Windows)
 
 ### 2.1 Descargar y ejecutar Mimikatz
 
@@ -125,7 +125,7 @@ Esto lista **todos los usuarios de AD y sus hashes NTLM**.
 
 ---
 
-## Paso 3 — DCSync con Crackmapexec (Kali)
+## Paso 3: DCSync con Crackmapexec (Kali)
 
 ### 3.1 Ejecutar desde Kali
 
@@ -158,9 +158,9 @@ python3 /usr/lib/python3/dist-packages/impacket/examples/secretsdump.py 'adlab.l
 
 ---
 
-## Paso 4 — Indicadores de Compromiso (IoCs)
+## Paso 4: Indicadores de Compromiso (IoCs)
 
-### Event ID 4662 — Directory Service Access
+### Event ID 4662: Directory Service Access
 
 Cuando `unai_simon` hace DCSync, el DC genera **Event ID 4662**:
 
@@ -194,7 +194,7 @@ Operación:
 
 ---
 
-## Paso 5 — Habilito la auditoría de acceso a Directory Service
+## Paso 5: Habilito la auditoría de acceso a Directory Service
 
 Para que el Event ID 4662 se genere hace falta activar la auditoría de "Directory Service Access", tanto a nivel local en el DC como a nivel de dominio vía GPO.
 
@@ -206,7 +206,7 @@ auditpol /set /subcategory:"Directory Service Access" /failure:enable /success:e
 
 ---
 
-## Paso 6 — Script de Detección PowerShell
+## Paso 6: Script de Detección PowerShell
 
 ```powershell
 # Detect-DCSync.ps1

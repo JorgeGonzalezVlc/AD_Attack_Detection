@@ -38,7 +38,7 @@ Evidencia:         Event ID 4768, 4769, 4776
 
 ---
 
-## Paso 1 — Obtener hash de krbtgt (DCSync)
+## Paso 1: Obtener hash de krbtgt (DCSync)
 
 **Ver**: [07 - DCSync](./07_DCSync.md) para aprender cómo extraer el hash de `krbtgt` usando Mimikatz.
 
@@ -63,7 +63,7 @@ Hash NTLM: 9a67389e0abcf592e62449d1d140c4ec
 
 ---
 
-## Paso 2 — Obtener datos necesarios
+## Paso 2: Obtener datos necesarios
 
 ### 2.1 SID del dominio
 
@@ -86,7 +86,7 @@ En inglés sería: **Administrator**
 
 ---
 
-## Paso 3 — Crear Golden Ticket con Mimikatz
+## Paso 3: Crear Golden Ticket con Mimikatz
 
 En **JORGE-CLIENTE**, abre PowerShell en `C:\Tools\mimikatz\x64\`:
 
@@ -119,7 +119,7 @@ Final Ticket Saved to file!
 
 ---
 
-## Paso 4 — Inyectar el ticket en memoria
+## Paso 4: Inyectar el ticket en memoria
 
 **Dentro de Mimikatz**, ejecuta:
 
@@ -133,7 +133,7 @@ Ahora el ticket está **inyectado en el cache Kerberos** de Mimikatz.
 
 ---
 
-## Paso 5 — Usar el ticket (abrir shell heredada)
+## Paso 5: Usar el ticket (abrir shell heredada)
 
 **Dentro de Mimikatz**, ejecuta:
 
@@ -145,7 +145,7 @@ Eso abre una **CMD nueva** que **hereda el ticket Golden inyectado**.
 
 ---
 
-## Paso 6 — Verificar que eres Admin
+## Paso 6: Verificar que eres Admin
 
 **En esa CMD nueva heredada**, ejecuta:
 
@@ -181,9 +181,9 @@ Si ves las compartidas (NETLOGON, Scripts, SYSVOL), **¡¡ERES ADMIN!!**
 
 ---
 
-## Paso 7 — Indicadores de Compromiso (IoCs)
+## Paso 7: Indicadores de Compromiso (IoCs)
 
-### Event ID 4768 — TGT Request (Ticket Granting Ticket)
+### Event ID 4768: TGT Request (Ticket Granting Ticket)
 
 Se genera cuando se solicita un TGT de Kerberos. **El Golden Ticket dispara estos eventos**.
 
@@ -201,7 +201,7 @@ Señales de alarma:
 
 ![Evento 4768 en el Visor de eventos de DC01 tras usar el Golden Ticket](<img/log evento 4768.png>)
 
-### Event ID 4769 — Service Ticket Request
+### Event ID 4769: Service Ticket Request
 
 Se genera cuando se solicita acceso a un servicio Kerberos.
 
@@ -217,7 +217,7 @@ Señales de alarma:
 
 ![Evento 4769 en el Visor de eventos de DC01 tras acceder a un recurso con el Golden Ticket](<img/log evento 4769.png>)
 
-### Event ID 4776 — NTLM Logon
+### Event ID 4776: NTLM Logon
 
 Se genera cuando hay autenticación NTLM. Puede aparecer junto con Golden Ticket si usa NTLM.
 
@@ -230,7 +230,7 @@ Descripción: "Se intentó validar las credenciales de una cuenta"
 
 ---
 
-## Paso 8 — Habilito la auditoría de autenticación Kerberos
+## Paso 8: Habilito la auditoría de autenticación Kerberos
 
 Para que los eventos 4768/4769/4776 se generen hace falta activar la auditoría de "Kerberos Authentication Service" y "Kerberos Service Ticket Operations" en la GPO del dominio.
 
